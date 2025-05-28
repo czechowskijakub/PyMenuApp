@@ -2,36 +2,41 @@ from tkinter import *
 from tkinter import font
 from Classes import *
 
+global bill
+bill = open("bill.txt", "w")
+
 Drinks = Dish("Drinks")
 Drinks.add_dish_position("Cappucino", 12)
 Drinks.add_dish_position("Cafe Latte", 16)
 
 Desserts = Dish("Desserts")
-#Desserts.add_dish_position("cake")
+Desserts.add_dish_position("Frappucino", 24)
 
 Appetizers = Dish("Appetizers")
 
 Default_dish_list = [Appetizers, Drinks, Desserts]
 Dish_list = []
 
+count = 0
+def write_on_bill(position, price):
+    global count
+    bill.write(f"{position}: {price}zl\n")
+    count += price
+    
+
 def add_new(dish):
     if dish not in Dish_list:
         Dish_list.append(dish)
         update_main_menu()
-
-def on_dish_add(dish):
-    add_new(dish)
 
 def open_dish_tab(dish):
     dish_tab = Toplevel()
     dish_tab.title(dish.name)
     lbl = Label(dish_tab, text=f"{dish.name} Positions:", anchor="center", width=30, height=2, font=("PT Sans", 14, "bold"))
     lbl.grid()
-
     for pos, price in dish.Positions_list.items():
-        dish_btn = Button(dish_tab, text=f"{pos} - {price}zl")
+        dish_btn = Button(dish_tab, text=f"{pos}: {price}zl", command=lambda p=pos, pr=price: write_on_bill(p, pr))                 # hereeeee
         dish_btn.grid(padx=5, pady=2)
-
 
 def open_tab():
     dish_catalogue = Toplevel()
@@ -44,7 +49,7 @@ def open_tab():
 
     for i in Default_dish_list:
         if i.name not in existing_names:
-            i.make_button(window=dish_catalogue, foo=lambda i=i: on_dish_add(i))
+            i.make_button(window=dish_catalogue, foo=lambda i=i: add_new(i))
 
 def update_main_menu():
     for widget in Menu.winfo_children():
@@ -68,3 +73,5 @@ Menu.geometry('400x400')
 
 update_main_menu()
 Menu.mainloop()
+bill.write(f"Total: {count}zl")
+bill.close()
