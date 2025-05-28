@@ -3,11 +3,11 @@ from tkinter import font
 from Classes import *
 
 Drinks = Dish("Drinks")
-Drinks.add_dish_position("Cappucino")
-Drinks.add_dish_position("Cafe Latte")
+Drinks.add_dish_position("Cappucino", 12)
+Drinks.add_dish_position("Cafe Latte", 16)
 
 Desserts = Dish("Desserts")
-Desserts.add_dish_position("cake")
+#Desserts.add_dish_position("cake")
 
 Appetizers = Dish("Appetizers")
 
@@ -28,8 +28,8 @@ def open_dish_tab(dish):
     lbl = Label(dish_tab, text=f"{dish.name} Positions:", anchor="center", width=30, height=2, font=("PT Sans", 14, "bold"))
     lbl.grid()
 
-    for pos in dish.Positions_list:
-        dish_btn = Button(dish_tab, text=str(pos))
+    for pos, price in dish.Positions_list.items():
+        dish_btn = Button(dish_tab, text=f"{pos} - {price}zl")
         dish_btn.grid(padx=5, pady=2)
 
 
