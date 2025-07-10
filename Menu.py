@@ -32,14 +32,26 @@ def sum_up():
 
 # save your setup -> saved_profile.txt
 def save_set():
+    
     saved_profile.seek(0)
     content = saved_profile.read()
+    
     for dish in Dish_list:
         if dish.name not in content:
             saved_profile.write(f"{dish.name},")
             for pos, price in dish.Positions_list.items():
                 saved_profile.write(f"{pos},{price},")
             saved_profile.write("\n")
+        
+def remove_from_set():
+    dish_aliases = [dish.name for dish in Dish_list]
+    with open('saved_profile.txt', 'r') as fr:
+        lines = fr.readlines()
+        with open('saved_profile.txt', 'w') as fw:
+            for line in lines:
+                words = line.split(',')
+                if words[0] in dish_aliases:
+                    fw.write(line)
 
 # load previously used menu
 def load_profile():
@@ -48,15 +60,17 @@ def load_profile():
         line = line.strip()
         if not line:
             continue
-        pos_content = line.split(",")
-        dish_ctgry = Dish(pos_content[0])
-        for i in range(1, len(pos_content)-1, 2):
+        dish_attribs = line.split(",")
+        dish_ctgry = Dish(dish_attribs[0])
+        
+        for i in range(1, len(dish_attribs)-1, 2):
             try:
-                name = pos_content[i]
-                price = float(pos_content[i+1])
+                name = dish_attribs[i]
+                price = float(dish_attribs[i+1])
                 dish_ctgry.add_dish_position(name, price)
             except (ValueError, IndexError):
-                print(f"Blad w linii: {line}")
+                print(f"Err in line: {line}")
+                
         Dish_list.append(dish_ctgry)
     
 def write_on_bill(position, price):
@@ -80,9 +94,19 @@ def open_tab():
 
     existing_names = [d.name for d in Dish_list]
 
-    for i in Default_dish_list:
-        if i.name not in existing_names:
-            i.make_button(window=dish_catalogue, foo=lambda i=i: add_new(i))
+    for dish in Default_dish_list:
+        if dish.name not in existing_names:
+            dish.make_button(window=dish_catalogue, foo=lambda i=dish: add_new(i))
+            
+def remove_dish(name):
+    Dish_list.remove(name)    
+    update_main_menu()
+
+def open_remove_dish():
+    removal = Toplevel()
+    removal.title("Remove")
+    for dish in Dish_list:
+        dish.make_button(window=removal, foo=lambda i=dish: remove_dish(i))
     
 # tab for positions of chosen dish
 def open_dish_tab(dish):
@@ -111,17 +135,6 @@ def update_main_menu():
     
     btn_remove = Button(Menu, text="Remove", command=open_remove_dish)
     btn_remove.grid()
-    
-def remove_dish(name):
-    Dish_list.remove(name)    
-    update_main_menu()
-
-def open_remove_dish():
-    removal = Toplevel()
-    removal.title("Remove")
-    for dish in Dish_list:
-        dish.make_button(window=removal, foo=lambda i=dish: remove_dish(i))
-    
 
 # Main Menu
 load_profile()
@@ -132,6 +145,8 @@ Menu.geometry('400x400')
 update_main_menu()
 Menu.mainloop()
 save_set()
+remove_from_set()
 sum_up()
 bill.close()
 saved_profile.close()
+print([dish.name for dish in Dish_list])
