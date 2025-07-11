@@ -22,6 +22,7 @@ Desserts.add_dish_position("Frappucino", 24)
 Appetizers = Dish("Appetizers")
 
 Default_dish_list = [Appetizers, Drinks, Desserts]
+Custom_dishes = []
 Dish_list = []
 
 count = 0
@@ -72,7 +73,7 @@ def load_profile():
                 print(f"Err in line: {line}")
                 
         Dish_list.append(dish_ctgry)
-    
+        
 def write_on_bill(position, price):
     global count
     bill.write(f"{position}: {price}zl\n")
@@ -87,21 +88,34 @@ def add_new(dish):
 # preset tab
 def open_tab():
     dish_catalogue = Toplevel()
-    lbl = Label(dish_catalogue, text="Add from preset:", anchor="center", width=20, height=4, font=("PT Sans", 14, "bold"))
+    lbl_custom = Label(dish_catalogue, text="Add your own:", anchor="center", width=20, height=4, font=("PT Sans", 14, "bold"))
     dish_catalogue.title("Add new")
     dish_catalogue.geometry('400x400')
-    lbl.grid()
+    lbl_custom.grid(row=0, column=0)
+    
+    #existing_names = [d.name for d in Dish_list]
+    # 
+    #for dish in Default_dish_list:
+    #    if dish.name not in existing_names:
+    #        dish.make_button(window=dish_catalogue, foo=lambda i=dish: add_new(i))
+    
+    user_input = Entry(dish_catalogue, width=10)
+    user_input.grid(padx=20, pady=0)
+    accept = Button(dish_catalogue, text="OK", anchor="center", command=lambda: add_to_custom(user_input))
+    accept.grid(padx=25)
+    
+def add_to_custom(user_input):
+    name = user_input.get()
+    name = str(name).capitalize()
+    if len(name) != 0 and name.isalpha():
+        Dish_list.append(Dish(name))
+    user_input.delete(0, END)
+    update_main_menu()
 
-    existing_names = [d.name for d in Dish_list]
-
-    for dish in Default_dish_list:
-        if dish.name not in existing_names:
-            dish.make_button(window=dish_catalogue, foo=lambda i=dish: add_new(i))
-            
 def remove_dish(name):
     Dish_list.remove(name)    
     update_main_menu()
-
+    
 def open_remove_dish():
     removal = Toplevel()
     removal.title("Remove")
@@ -149,4 +163,4 @@ remove_from_set()
 sum_up()
 bill.close()
 saved_profile.close()
-print([dish.name for dish in Dish_list])
+print("lol", *Dish_list.name)
