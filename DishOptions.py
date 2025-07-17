@@ -9,7 +9,7 @@ class DishOptions:
         with open(self.csv_file, 'w') as file:
             for dish in self.dish_list:
                 file.write(f"{dish.name},")
-                for position, price in dish.Positions_list:
+                for position, price in dish.Positions_list.items():
                     file.write(f"{position},{price},")
                 file.write("\n")
                 

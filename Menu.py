@@ -3,6 +3,7 @@ from App import *
 from Dish import * 
 from DishOptions import *
 from Bill import *
+from CustomDish import *
 
 if __name__ == "__main__":
     dish_manager = DishOptions("saved_profile.txt")
@@ -20,6 +21,3 @@ if __name__ == "__main__":
     
     dish_manager.save_profile()
     bill.save_bill()
-    dish_manager.load_profile()
-    
-    
