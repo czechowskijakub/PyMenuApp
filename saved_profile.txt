@@ -1,1 +1,1 @@
-Desserts,Tiramisu,12.0,Lody czeko,10.0,Lody waniliowe,10.0,Frappucino,20.0,
+Desserts,Lody waniliowe,14.0,
