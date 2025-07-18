@@ -8,7 +8,8 @@ class AddDishWindow:
         
         self.window = Toplevel(parent)
         self.window.title("Add new")
-        self.window.geometry("300x200")
+        self.window.geometry("300x150")
+        self.window.resizable(width=False, height=False)
 
         lbl = Label(self.window, text = "Add your dish:")
         lbl.pack(pady=10)
